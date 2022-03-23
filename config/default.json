@@ -1,0 +1,10 @@
+{
+    "client": {
+        "api_key": "",
+        "prefix": "c!"
+    },
+    "log": {
+        "level": "debug",
+        "logToFile": true
+    }
+}
