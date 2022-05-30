@@ -1,8 +1,6 @@
 # CatBot
 A Server specific Sapphire Discord bot
 
-# Features
-
 # Pre-installation requirements
 - NodeJS >=16.14.2
 - NPM
@@ -15,7 +13,7 @@ $ npm install
 
 # Configuration
 The `config/default.json` file contains all configurable settings. 
-It is required to provide your own token, all other settings can be left at default.
+All options are required to be set if blank.
 
 # Running & Testing
 The program can be started with `npm start`

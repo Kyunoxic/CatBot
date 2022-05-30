@@ -1,7 +1,9 @@
 {
     "client": {
         "api_key": "",
-        "prefix": "c!"
+        "prefix": "c!",
+        "guild_id": "",
+        "channel_id": ""
     },
     "log": {
         "level": "debug",

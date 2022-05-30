@@ -4,6 +4,8 @@ import nodeConfig from 'config';
 interface ClientConfig {
     api_key: string;
     prefix: SapphirePrefix;
+    guild_id: string;
+    channel_id: string;
 }
 
 interface LogConfig {
@@ -13,7 +15,9 @@ interface LogConfig {
 
 const clientC: ClientConfig = {
     api_key: nodeConfig.get('client.api_key'),
-    prefix: nodeConfig.get('client.prefix')
+    prefix: nodeConfig.get('client.prefix'),
+    guild_id: nodeConfig.get('client.guild_id'),
+    channel_id: nodeConfig.get('client.channel_id')
 }
 
 const logC: LogConfig = {
