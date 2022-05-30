@@ -108,7 +108,9 @@ export async function updateBanner(guild?: Guild, channel?: Channel | null) {
             });
         }
             
-        randomMessage = messages.random();
+        if(validAttachments.length < 1) {
+            randomMessage = messages.random();
+        }
     }
 
     if(validAttachments.length < 1) {
