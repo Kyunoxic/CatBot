@@ -3,6 +3,8 @@ import { clientConfig } from "./config";
 import { Logger } from "./util/logger";
 import schedule from "node-schedule";
 import { bannerJob } from "./tasks/banner";
+import { vxTwitterHandler } from "./tasks/vxtwitter";
+import { discordMediaHandler } from "./tasks/discordmedia";
 
 Logger.log('Starting...');
 
@@ -41,6 +43,12 @@ client.on('ready', async () => {
 
     Logger.log('Ready!')
 });
+
+//VXTwitter handling
+client.on('messageCreate', async (message) => vxTwitterHandler(message));
+
+//Discordapp Media handling
+client.on('messageCreate', async (message) => discordMediaHandler(message));
 
 client.on('error', err => {
     Logger.error(err.message);
