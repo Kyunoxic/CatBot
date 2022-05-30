@@ -2,7 +2,7 @@ import { SapphireClient } from "@sapphire/framework";
 import { clientConfig } from "./config";
 import { Logger } from "./util/logger";
 import schedule from "node-schedule";
-import { updateBanner } from "./tasks/banner";
+import { bannerJob } from "./tasks/banner";
 
 Logger.log('Starting...');
 
@@ -37,18 +37,7 @@ client.on('ready', async () => {
     Logger.log(`Logged in as ${client.user.tag} (${client.user.id})`);
 
     //Runs every day at midnight
-    jobs.push(schedule.scheduleJob('0 0 0 * * *', async () => {
-        Logger.log('Running banner job');
-        
-        const guild = await client.guilds.fetch(clientConfig.guild_id);
-        const channel = await guild.channels.fetch(clientConfig.channel_id);
-
-        if(channel?.type != 'GUILD_TEXT') {
-            Logger.warn('Tried to updateBanner with non-textchannel supplied');
-        }
-
-        updateBanner(guild, channel);
-    }));
+    jobs.push(schedule.scheduleJob('0 0 0 * * *', async () => bannerJob(client)));
 
     Logger.log('Ready!')
 });

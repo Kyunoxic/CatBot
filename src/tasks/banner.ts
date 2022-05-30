@@ -1,5 +1,20 @@
+import { SapphireClient } from "@sapphire/framework";
 import { Channel, Collection, Guild, Message, MessageAttachment, MessageEmbed, TextChannel } from "discord.js";
+import { clientConfig } from "../config";
 import { Logger } from "../util/logger";
+
+export async function bannerJob(client: SapphireClient,) {
+    Logger.log('Running banner job');
+
+    const guild = await client.guilds.fetch(clientConfig.guild_id);
+    const channel = await guild.channels.fetch(clientConfig.channel_id);
+
+    if (channel?.type != 'GUILD_TEXT') {
+        Logger.warn('Tried to updateBanner with non-textchannel supplied');
+    }
+
+    updateBanner(guild, channel);
+}
 
 export async function updateBanner(guild?: Guild, channel?: Channel | null) {
     if(!guild || !channel) {
