@@ -5,7 +5,7 @@ import { logConfig } from '../config';
 
 export class Logger {
 
-    static log(message: string) {
+    static log(message?: string) {
         const dateTime = new Date().toLocaleTimeString();
 
         console.log(
@@ -19,7 +19,7 @@ export class Logger {
         }
     }
 
-    static warn(message: string) {
+    static warn(message?: string) {
         const dateTime = new Date().toLocaleTimeString();
 
         console.log(
@@ -34,7 +34,7 @@ export class Logger {
         }
     }
 
-    static error(message: string) {
+    static error(message?: string) {
         const dateTime = new Date().toLocaleTimeString();
 
         console.log(
@@ -49,7 +49,7 @@ export class Logger {
         }
     }
 
-    static fatal(message: string) {
+    static fatal(message?: string) {
         const dateTime = new Date().toLocaleTimeString();
 
         console.log(
