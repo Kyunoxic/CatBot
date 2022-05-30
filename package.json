@@ -2,10 +2,10 @@
     "name": "catbot",
     "version": "0.1.0",
     "description": "Custom bot for the CAT server",
-    "main": "build/index.js",
+    "main": "build/src/index.js",
     "scripts": {
         "test": "mocha -r ts-node/register test/**/*.ts",
-        "start": "npm run build && node build/index.js",
+        "start": "npm run build && node build/src/index.js",
         "build": "npm run build-ts",
         "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
         "build-ts": "tsc"
@@ -17,6 +17,7 @@
         "@types/config": "^0.0.41",
         "@types/expect": "^24.3.0",
         "@types/mocha": "^9.1.0",
+        "@types/node-schedule": "^2.1.0",
         "@typescript-eslint/eslint-plugin": "^5.16.0",
         "@typescript-eslint/parser": "^5.16.0",
         "chai": "^4.3.6",
@@ -26,11 +27,12 @@
         "typescript": "^4.6.2"
     },
     "dependencies": {
-        "@sapphire/framework": "^2.4.1",
+        "@sapphire/framework": "^2.5.0",
         "chalk": "^4.1.2",
         "config": "^3.3.7",
-        "discord.js": "^13.6.0",
-        "log-to-file": "^3.0.0"
+        "discord.js": "^13.7.0",
+        "log-to-file": "^3.0.0",
+        "node-schedule": "^2.1.0"
     },
     "eslintIgnore": [
         "build/",
