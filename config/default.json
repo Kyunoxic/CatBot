@@ -3,7 +3,8 @@
         "api_key": "",
         "prefix": "c!",
         "guild_id": "",
-        "channel_id": ""
+        "channel_id": "",
+        "vr_channel_id": ""
     },
     "log": {
         "level": "debug",

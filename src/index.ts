@@ -5,6 +5,7 @@ import schedule from "node-schedule";
 import { bannerJob } from "./tasks/banner";
 import { vxTwitterHandler } from "./tasks/vxtwitter";
 import { discordMediaHandler } from "./tasks/discordmedia";
+import { chargeVRStuff } from "./tasks/vrcharging";
 
 Logger.log('Starting...');
 
@@ -40,6 +41,9 @@ client.on('ready', async () => {
 
     //Runs every day at midnight
     jobs.push(schedule.scheduleJob('0 0 0 * * *', async () => bannerJob(client)));
+    
+    //Runs every day at 18:00
+    jobs.push(schedule.scheduleJob('0 0 18 * * *', async () => chargeVRStuff(client)));
 
     Logger.log('Ready!')
 });
