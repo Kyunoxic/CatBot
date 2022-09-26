@@ -13,10 +13,10 @@ export async function bannerJob(client: SapphireClient,) {
         Logger.warn('Tried to updateBanner with non-textchannel supplied');
     }
 
-    updateBanner(guild, channel);
+    updateBanner(guild, channel, false);
 }
 
-export async function updateBanner(guild?: Guild, channel?: Channel | null) {
+export async function updateBanner(guild?: Guild, channel?: Channel | null, hideOutput = false) {
     if(!guild || !channel) {
         Logger.warn('Guild or channel not found');
         return;
@@ -31,7 +31,7 @@ export async function updateBanner(guild?: Guild, channel?: Channel | null) {
     await textChannel.fetch(); //Ensure up to date
     
     const statusEmbed = createBannerEmbed();
-    const statusMessage = await textChannel.send({
+    const statusMessage = hideOutput ? null : await textChannel.send({
         embeds: [statusEmbed]
     });
 
@@ -88,9 +88,12 @@ export async function updateBanner(guild?: Guild, channel?: Channel | null) {
 
     //@ts-expect-error - If we got here there will be a message.
     statusEmbed.setDescription(`Fetched ${messages.size} messages, starting from <t:${Math.round(messages.last()?.createdAt.getTime() / 1000)}:R>`);
-    await statusMessage.edit({
-        embeds: [statusEmbed]
-    });
+    
+    if(statusMessage) {
+        await statusMessage.edit({
+            embeds: [statusEmbed]
+        });
+    }
 
     let tries = 0;
     let randomMessage = messages.random();
@@ -116,12 +119,14 @@ export async function updateBanner(guild?: Guild, channel?: Channel | null) {
     if(validAttachments.length < 1) {
         Logger.warn('Could not find any valid attachments');
         
-        statusEmbed.addField('No new banners for today!', `Keeping the old one.`)
-            .setTimestamp()
-            .setColor('#008518');
-        await statusMessage.edit({
-            embeds: [statusEmbed]
-        });
+        if (statusMessage) {
+            statusEmbed.addField('No new banners for today!', `Keeping the old one.`)
+                .setTimestamp()
+                .setColor('#008518');
+            await statusMessage.edit({
+                embeds: [statusEmbed]
+            });
+        }
 
         return 0;
     }
@@ -133,13 +138,15 @@ export async function updateBanner(guild?: Guild, channel?: Channel | null) {
     await guild.setBanner(attachment.url)
         .catch(Logger.error);
 
-    statusEmbed.setThumbnail(attachment.url)
-        .addField('New Banner Chosen!', `Original by <@${randomMessage?.author.id}>`)
-        .setTimestamp()
-        .setColor('#008518');
-    await statusMessage.edit({
-        embeds: [statusEmbed]
-    });
+    if (statusMessage) {
+        statusEmbed.setThumbnail(attachment.url)
+            .addField('New Banner Chosen!', `Original by <@${randomMessage?.author.id}>`)
+            .setTimestamp()
+            .setColor('#008518');
+        await statusMessage.edit({
+            embeds: [statusEmbed]
+        });
+    }
 
     return 0;
 }

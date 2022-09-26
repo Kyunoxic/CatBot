@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "@sapphire/framework": "3.1.1",
+        "@sapphire/time-utilities": "^1.7.8",
         "chalk": "4.1.2",
         "config": "3.3.7",
         "discord.js": "13.11.0",

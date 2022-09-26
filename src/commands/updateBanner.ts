@@ -1,5 +1,5 @@
-import { Args, Command } from "@sapphire/framework";
-import type { Message } from "discord.js";
+import { Args, ChatInputCommand, Command } from "@sapphire/framework";
+import { GuildChannel, Message } from "discord.js";
 import { updateBanner } from "../tasks/banner";
 
 export class UpdateBannerCommand extends Command {
@@ -9,7 +9,8 @@ export class UpdateBannerCommand extends Command {
             name: 'updatebanner',
             description: 'Updates the server banner with a random image from a channel',
             requiredUserPermissions: ['MANAGE_GUILD'],
-            requiredClientPermissions: ['MANAGE_GUILD']
+            requiredClientPermissions: ['MANAGE_GUILD'],
+            runIn: "GUILD_TEXT",
         });
     }
 
@@ -23,6 +24,54 @@ export class UpdateBannerCommand extends Command {
             return message.channel.send('Invalid channel. This command can only be used with a text channel.');
         }
 
-        updateBanner(message.guild, channel);
+        updateBanner(message.guild, channel, false);
+    }
+
+    public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+        if(!interaction.guild) {
+            return interaction.reply({
+                content: 'This command can only be used in a server',
+                ephemeral: true
+            });
+        }
+
+        const channel = interaction.options.getChannel('channel') as GuildChannel;
+        const ephemeral = interaction.options.getBoolean('hidden') ?? false;
+        const sneaky = interaction.options.getBoolean('sneaky') ?? false;
+
+        updateBanner(interaction.guild, channel, sneaky);
+        
+        return interaction.reply({
+            content: `Started the banner update task ${sneaky ? 'without notifying the channel' : ''}`,
+            ephemeral: ephemeral
+        });
+    }
+
+    public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
+        registry.registerChatInputCommand((builder) => {
+            builder
+                .setName(this.name)
+                .setDescription(this.description)
+                .addChannelOption((option) => 
+                    option
+                        .setName('channel')
+                        .setDescription('The channel to pick a random image from')
+                        .setRequired(true)
+                )
+                .addBooleanOption((option) =>
+                    option
+                        .setName('sneaky')
+                        .setDescription('Update banner without notifying users')
+                        .setRequired(false)
+                )
+                .addBooleanOption((option) =>
+                    option
+                        .setName('hidden')
+                        .setDescription('Whether the command should be hidden or not')
+                        .setRequired(false)
+                )
+        }, {
+            idHints: ['1024021873673109515']
+        });
     }
 }

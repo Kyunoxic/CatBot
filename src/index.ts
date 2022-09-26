@@ -45,7 +45,7 @@ client.on('ready', async () => {
     //Runs every day at 18:00
     jobs.push(schedule.scheduleJob('0 0 18 * * *', async () => chargeVRStuff(client)));
 
-    Logger.log('Ready!')
+    Logger.log('Ready!')    
 });
 
 //VXTwitter handling
@@ -60,6 +60,8 @@ client.on('error', err => {
 });
 
 client.on('warn', err => Logger.warn(err));
+
+client.on('chatInputCommandDenied', warn => Logger.warn(warn.message));
 
 process.on('unhandledRejection', (reason, promise) => {
     //@ts-expect-error - Unknown object type
