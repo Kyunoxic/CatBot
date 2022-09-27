@@ -1,6 +1,7 @@
 import { Args, ChatInputCommand, Command } from "@sapphire/framework";
-import { GuildChannel, Message } from "discord.js";
+import { GuildChannel, Message, Permissions } from "discord.js";
 import { updateBanner } from "../tasks/banner";
+import { ApplicationCommandType } from 'discord-api-types/v10';
 
 export class UpdateBannerCommand extends Command {
     public constructor(context: Command.Context, options: Command.Options) {
@@ -10,7 +11,7 @@ export class UpdateBannerCommand extends Command {
             description: 'Updates the server banner with a random image from a channel',
             requiredUserPermissions: ['MANAGE_GUILD'],
             requiredClientPermissions: ['MANAGE_GUILD'],
-            runIn: "GUILD_TEXT",
+            runIn: "GUILD_TEXT"
         });
     }
 
@@ -47,11 +48,29 @@ export class UpdateBannerCommand extends Command {
         });
     }
 
+    public override async contextMenuRun(interaction: Command.ContextMenuInteraction) {
+        if(!interaction.isMessageContextMenu() || !(interaction.targetMessage instanceof Message) || !interaction.guild) {
+            return interaction.reply({
+                content: 'This command can only be used on a message in a guild channel',
+                ephemeral: true
+            });
+        }
+
+        const channel = interaction.targetMessage.channel as GuildChannel;
+        updateBanner(interaction.guild, channel, false);
+
+        return interaction.reply({
+            content: 'Started the banner update task for a message in this channel',
+            ephemeral: true
+        });
+    }
+
     public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
         registry.registerChatInputCommand((builder) => {
             builder
                 .setName(this.name)
                 .setDescription(this.description)
+                .setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_GUILD)
                 .addChannelOption((option) => 
                     option
                         .setName('channel')
@@ -72,6 +91,15 @@ export class UpdateBannerCommand extends Command {
                 )
         }, {
             idHints: ['1024021873673109515']
+        });
+        registry.registerContextMenuCommand((builder) => {
+            builder
+                .setName('Update Banner')
+                .setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_GUILD)
+                .setDMPermission(false)
+                .setType(ApplicationCommandType.Message)
+        }, {
+            idHints: ['1024310826942861333']
         });
     }
 }
