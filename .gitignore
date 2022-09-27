@@ -43,3 +43,4 @@ jspm_packages/
 
 ### Others ###
 build/
+db.json

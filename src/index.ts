@@ -6,12 +6,20 @@ import { bannerJob } from "./tasks/banner";
 import { vxTwitterHandler } from "./tasks/vxtwitter";
 import { discordMediaHandler } from "./tasks/discordmedia";
 import { chargeVRStuff } from "./tasks/vrcharging";
+import { Config, JsonDB } from "node-json-db";
+import * as fs from "fs";
+
+declare module "discord.js" {
+    interface Client {
+        db: JsonDB;
+    }
+}
 
 Logger.log('Starting...');
 
 const jobs = [];
 const client = new SapphireClient({
-    intents: ["GUILDS", "GUILD_MESSAGES"],
+    intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
     defaultPrefix: clientConfig.prefix,
     caseInsensitiveCommands: true,
     presence: {
@@ -20,7 +28,8 @@ const client = new SapphireClient({
             name: "VRChat",
             type: "PLAYING"
         }]
-    }
+    },
+    partials: ["GUILD_MEMBER", "USER"]
 });
 
 
@@ -28,6 +37,12 @@ if(!client) {
     Logger.fatal("Failed to initialize client");
     process.exit(1);
 }
+
+//Set up jsonDB
+if(!fs.existsSync('./db.json')) {
+    fs.writeFileSync('./db.json', '{"nameprotections":{}}');
+}
+client.db = new JsonDB(new Config("db", true, false, '/'));
 
 client.login(clientConfig.api_key)
     .catch(err => {
@@ -45,6 +60,11 @@ client.on('ready', async () => {
     //Runs every day at 18:00
     jobs.push(schedule.scheduleJob('0 0 18 * * *', async () => chargeVRStuff(client)));
 
+    //Ensure no partials for user nicknames
+    client.guilds.cache.forEach(async guild => {
+        await guild.members.fetch();
+    });
+
     Logger.log('Ready!')    
 });
 
@@ -54,6 +74,7 @@ client.on('messageCreate', async (message) => vxTwitterHandler(message));
 //Discordapp Media handling
 client.on('messageCreate', async (message) => discordMediaHandler(message));
 
+//Errors and warning logging
 client.on('error', err => {
     Logger.error(err.message);
     Logger.error(err.stack);
