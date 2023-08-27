@@ -3,7 +3,7 @@ import { GuildTextBasedChannel } from "discord.js";
 import { clientConfig } from "../config";
 import { Logger } from "../util/logger";
 
-const peopleToBotherToCharge: string[] = ['352427162030047252', '313367547028176898'];
+const peopleToBotherToCharge: string[] = ['352427162030047252', '313367547028176898', '264862132296744960', '371664596051820554', '381157302369255424'];
 
 export async function chargeVRStuff(client: SapphireClient): Promise<void> {
     Logger.log('Running chargeVRStuff job');
