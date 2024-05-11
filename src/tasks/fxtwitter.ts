@@ -13,8 +13,12 @@ export async function vxTwitterHandler(message: Message) {
     //Check if embed contains a video
     if (!message.embeds[0].video) return;
 
-    //Destroy it and use VXTwitter!
-    const extractedURL = twitterURL[0].replace('https://twitter.com/', 'https://vxtwitter.com/');
+    //Destroy it and use FXTwitter!
+    var extractedURL = twitterURL[0].replace('https://twitter.com/', 'https://fxtwitter.com/');
+
+    //Auto-translate to English
+    extractedURL += (extractedURL.slice(-1) == "/") ? "en" : "/en";
+
     await message.suppressEmbeds(true);
     await message.channel.send(`Original posted by <@${message.author.id}>\n${extractedURL}`);
 }
