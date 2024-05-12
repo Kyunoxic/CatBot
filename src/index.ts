@@ -3,7 +3,7 @@ import { clientConfig } from "./config";
 import { Logger } from "./util/logger";
 import schedule from "node-schedule";
 import { bannerJob } from "./tasks/banner";
-import { vxTwitterHandler } from "./tasks/vxtwitter";
+import { vxTwitterHandler } from "./tasks/fxtwitter";
 import { discordMediaHandler } from "./tasks/discordmedia";
 import { chargeVRStuff } from "./tasks/vrcharging";
 import { Config, JsonDB } from "node-json-db";
